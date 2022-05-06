@@ -6,56 +6,56 @@ export default class Aluno {
   // DECLARAÇÃO DE ATRIBUTOS PRIVADOS: Em JavaScript, se o nome do atributo tem # no início, isso 
   // indica que ele é privado. Também deve-se colocar a presença dele destacada, como está abaixo.
   //
-  #matricula;
-  #cpf;
+  #idJogo;
   #nome;
-  #email;
-  #telefone;
+  #precoAtual;
+  #anoLancamento;
+  #descricao;
 
   //-----------------------------------------------------------------------------------------//
 
-  constructor(matr, cpf, nome, email, telefone) {
-    this.setMatricula(matr);
-    this.setCpf(cpf);
+  constructor(idjogo, nome, precoAtual, descricao, anoLancamento) {
+    this.setIdJogo(idjogo);
     this.setNome(nome);
-    this.setEmail(email);
-    this.setTelefone(telefone);      
+    this.setPrecoAtual(precoAtual);
+    this.setDescricao(descricao);
+    this.setAnoLancamento(anoLancamento);      
   }
   
   //-----------------------------------------------------------------------------------------//
 
-  getMatricula() {
-    return this.#matricula;
+  getIdJogo() {
+    return this.#idJogo;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  setMatricula(matr) {
-    if(!Aluno.validarMatricula(matr))
-      throw new ModelError("Matrícula Inválida: " + matr);
-    this.#matricula = matr;
+  setIdJogo(idJogo) {
+    if(!Aluno.validarIdJogo(idJogo))
+      throw new ModelError("Identificação do jogo Inválido: " + idJogo);
+    this.#idJogo = idJogo;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  getCpf() {
-    return this.#cpf;
+  getPrecoAtual() {
+    return this.#precoAtual;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  setCpf(cpf) {
-    if(!Aluno.validarCpf(cpf))
-      throw new ModelError("CPF Inválido: " + cpf);
-    this.#cpf = cpf;
+  setPrecoAtual(precoAtual) {
+    if(!Aluno.validarPrecoAtual(precoAtual))
+      throw new ModelError("Formato de Preço atual Inválido: " + precoAtual +"\nLembre-se o formato correto é 'R$ 99,00'");
+    this.#precoAtual = precoAtual;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
   getNome() {
     return this.#nome;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
   setNome(nome) {
@@ -63,98 +63,69 @@ export default class Aluno {
       throw new ModelError("Nome Inválido: " + nome);
     this.#nome = nome;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  getEmail() {
-    return this.#email;
+  getDescricao() {
+    return this.#descricao;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  setEmail(email) {
-    if(!Aluno.validarEmail(email))
-      throw new ModelError("Email inválido: " + email);
-    this.#email = email;
+  setDescricao(descricao) {
+    if(!Aluno.validarDescricao(descricao))
+      throw new ModelError("A Descrição passou do limite de 150 caracteres.");
+    this.#descricao = descricao;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  getTelefone() {
-    return this.#telefone;
+  getAnoLancamento() {
+    return this.#anoLancamento;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
-  setTelefone(telefone) {
-    if(!Aluno.validarTelefone(telefone))
-      throw new ModelError("Telefone inválido: " + telefone);
-    this.#telefone = telefone;
+  setAnoLancamento(anoLancamento) {
+    if(!Aluno.validarAnoLancamento(anoLancamento))
+      throw new ModelError("Ano Lançamento inválido: " + anoLancamento + "\nLembre-se: o formato para o ano é 'AAAA'");
+    this.#anoLancamento = anoLancamento;
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
   toJSON() {
     return '{' +
-               '"matricula" : "'+ this.#matricula + '",' +
-               '"cpf" :  "'     + this.#cpf       + '",' +
-               '"nome" : "'     + this.#nome      + '",' +
-               '"email" : "'    + this.#email     + '",' +
-               '"telefone" : "' + this.#telefone  + '" ' + 
+               '"idJogo" : "'+ this.#idJogo + '",' +
+               '"precoAtual" :  "'     + this.#precoAtual       + '",' +
+               '"descricao" : "'     + this.#descricao      + '",' +
+               '"anoLancamento" : "'    + this.#anoLancamento     + '",' +
+               '"nome" : "' + this.#nome  + '" ' + 
            '}';  
   }
-  
+
   //-----------------------------------------------------------------------------------------//
 
   static assign(obj) {
-    return new Aluno(obj.matricula, obj.cpf, obj.nome, obj.email, obj.telefone);
+    return new Aluno(obj.idJogo, obj.nome, obj.precoAtual, obj.descricao, obj.anoLancamento);
   }
 
   //-----------------------------------------------------------------------------------------//
+
+
   
   static deassign(obj) { 
     return JSON.parse(obj.toJSON());
   }
 
-  //-----------------------------------------------------------------------------------------//
+   //-----------------------------------------------------------------------------------------//
 
-  static validarMatricula(matr) {
-    if(matr == null || matr == "" || matr == undefined)
+   static validarIdJogo(idJogo) {
+    if(idJogo == null || idJogo == "" || idJogo == undefined)
       return false;
     const padraoMatricula = /[0-9]/;
-    if (!padraoMatricula.test(matr))
+    if (!padraoMatricula.test(idJogo))
       return false;
-    return true;
-  }
-
-  //-----------------------------------------------------------------------------------------//
-
-  static validarCpf(strCpf) {
-    let soma;
-    let resto;
-    let i;
-
-    soma = 0;
-    strCpf = strCpf.replace(".", "");
-    strCpf = strCpf.replace(".", "");
-    strCpf = strCpf.replace("-", "");
-
-    if (strCpf == "00000000000") return false;
-
-    for (i = 1; i <= 9; i++)
-      soma = soma + parseInt(strCpf.substring(i - 1, i)) * (11 - i);
-    resto = (soma * 10) % 11;
-
-    if (resto == 10 || resto == 11) resto = 0;
-    if (resto != parseInt(strCpf.substring(9, 10))) return false;
-
-    soma = 0;
-    for (i = 1; i <= 10; i++)
-      soma = soma + parseInt(strCpf.substring(i - 1, i)) * (12 - i);
-    resto = (soma * 10) % 11;
-
-    if (resto == 10 || resto == 11) resto = 0;
-    if (resto != parseInt(strCpf.substring(10, 11))) return false;
     return true;
   }
 
@@ -173,32 +144,41 @@ export default class Aluno {
 
   //-----------------------------------------------------------------------------------------//
 
-  static validarEmail(email) {
-    if(email == null || email == "" || email == undefined)
+  static validarPrecoAtual(precoAtual) {
+    if(precoAtual == null || precoAtual == "" || precoAtual == undefined)
       return false;
-
-    const padraoEmail = /[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+.[a-zA-Z]{2,4}/;
-    if (!padraoEmail.test(email)) 
+    const padraoprecoAtual = /^R\$(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/g;
+    if (!padraoprecoAtual.test(precoAtual)) 
       return false;
     return true;
   }
 
   //-----------------------------------------------------------------------------------------//
-
-  static validarTelefone(telefone) {
-    if(telefone == null || telefone == "" || telefone == undefined)
+  static validarAnoLancamento(anoLancamento) {
+    if(anoLancamento == null || anoLancamento == "" || anoLancamento == undefined)
       return false;
-
-    const padraoTelefone = /^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/;
-    if (!padraoTelefone.test(telefone)) 
+    if (anoLancamento.length > 4) 
+      return false;
+    const padraoprecoAtual = /\d{4,4}/g;
+    if (!padraoprecoAtual.test(anoLancamento)) 
       return false;
     return true;
   }
+  //-----------------------------------------------------------------------------------------//
+
+  static validarDescricao(descricao) {
+    if(descricao == null || descricao == "" || descricao == undefined)
+      return false;
+    if (descricao.length > 150) {
+      return false;
+  }
+  return true;
+}
 
   //-----------------------------------------------------------------------------------------//
    
   mostrar() {
-    let texto = "Matrícula: " + this.matricula + "\n";
+    let texto = "Matrícula: " + this.idJogoicula + "\n";
     texto += "Nome: " + this.nome + "\n";
       
     alert(texto);

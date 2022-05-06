@@ -29,7 +29,7 @@ export default class DaoAluno {
           let store = db.createObjectStore("AlunoST", {
             autoIncrement: true
           });
-          store.createIndex("idxMatricula", "matricula", { unique: true });
+          store.createIndex("idxMatricula", "idJogo", { unique: true });
         };
 
         requestDB.onerror = event => {
@@ -83,7 +83,11 @@ export default class DaoAluno {
 
   //-----------------------------------------------------------------------------------------//
 
-  async obterAlunoPelaMatricula(matr) {
+  
+
+  //-----------------------------------------------------------------------------------------//
+  
+  async obterAlunoPelaMatricula(idJogo) {
     let connection = await this.obterConexao();      
     let promessa = new Promise(function(resolve, reject) {
       let transacao;
@@ -98,7 +102,7 @@ export default class DaoAluno {
         reject(new ModelError("Erro: " + e));
       }
 
-      let consulta = indice.get(matr);
+      let consulta = indice.get(idJogo);
       consulta.onsuccess = function(event) { 
         if(consulta.result != null)
           resolve(Aluno.assign(consulta.result)); 
@@ -144,6 +148,7 @@ export default class DaoAluno {
   //-----------------------------------------------------------------------------------------//
 
   async incluir(aluno) {
+    
     let connection = await this.obterConexao();      
     let resultado = new Promise( (resolve, reject) => {
       let transacao = connection.transaction(["AlunoST"], "readwrite");
@@ -170,11 +175,12 @@ export default class DaoAluno {
       };
       let store = transacao.objectStore("AlunoST");     
       let indice = store.index('idxMatricula');
-      var keyValue = IDBKeyRange.only(aluno.getMatricula());
+      var keyValue = IDBKeyRange.only(aluno.getIdJogo());
       indice.openCursor(keyValue).onsuccess = event => {
         const cursor = event.target.result;
+        console.log(cursor);
         if (cursor) {
-          if (cursor.value.matricula == aluno.getMatricula()) {
+          if (cursor.value.idJogo == aluno.getIdJogo()) {
             const request = cursor.update(Aluno.deassign(aluno));
             request.onsuccess = () => {
               console.log("[DaoAluno.alterar] Cursor update - Sucesso ");
@@ -183,7 +189,7 @@ export default class DaoAluno {
             };
           } 
         } else {
-          reject(new ModelError("Aluno com a matrícula " + aluno.getMatricula() + " não encontrado!",""));
+          reject(new ModelError("Aluno com a idJogo " + aluno.getIdJogo() + " não encontrado!",""));
         }
       };
     });
@@ -201,11 +207,11 @@ export default class DaoAluno {
       };
       let store = transacao.objectStore("AlunoST");
       let indice = store.index('idxMatricula');
-      var keyValue = IDBKeyRange.only(aluno.getMatricula());
+      var keyValue = IDBKeyRange.only(aluno.getIdJogo());
       indice.openCursor(keyValue).onsuccess = event => {
         const cursor = event.target.result;
         if (cursor) {
-          if (cursor.value.matricula == aluno.getMatricula()) {
+          if (cursor.value.idJogo == aluno.getIdJogo()) {
             const request = cursor.delete();
             request.onsuccess = () => { 
               resolve("Ok"); 
@@ -213,7 +219,7 @@ export default class DaoAluno {
             return;
           }
         } else {
-          reject(new ModelError("Aluno com a matrícula " + aluno.getMatricula() + " não encontrado!",""));
+          reject(new ModelError("Aluno com a idJogoícula " + aluno.getIdJogo() + " não encontrado!",""));
         }
       };
     });

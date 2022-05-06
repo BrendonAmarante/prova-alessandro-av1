@@ -125,10 +125,10 @@ export default class CtrlManterAlunos {
 
   //-----------------------------------------------------------------------------------------//
  
-  async incluir(matr, cpf, nome, email, telefone) {
+  async incluir(idjogo, nome, precoAtual, descricao, anoLancamento) {
     if(this.#status == Status.INCLUINDO) {
       try {
-        let aluno = new Aluno(matr, cpf, nome, email, telefone);
+        let aluno = new Aluno(idjogo, nome, precoAtual, descricao, anoLancamento);
         await this.#dao.incluir(aluno); 
         this.#status = Status.NAVEGANDO;
         this.#atualizarContextoNavegacao();
@@ -141,17 +141,18 @@ export default class CtrlManterAlunos {
 
   //-----------------------------------------------------------------------------------------//
  
-  async alterar(matr, cpf, nome, email, telefone) {
+  async alterar(idjogo, nome, precoAtual, descricao, anoLancamento) {
     if(this.#status == Status.ALTERANDO) {
       try {
-        let aluno = await this.#dao.obterAlunoPelaMatricula(matr); 
+        let aluno = await this.#dao.obterAlunoPelaMatricula(idjogo); 
         if(aluno == null) {
-          alert("Aluno com a matrícula " + matr + " não encontrado.");
+          alert("Jogo com identificação " + idjogo + " não encontrado.");
         } else {
-          aluno.setCpf(cpf);
+          console.log("ta chegando aqui");
+          aluno.setPrecoAtual(precoAtual);
           aluno.setNome(nome);
-          aluno.setEmail(email);
-          aluno.setTelefone(telefone);
+          aluno.setDescricao(descricao);
+          aluno.setAnoLancamento(anoLancamento);
           await this.#dao.alterar(aluno); 
         }
         this.#status = Status.NAVEGANDO;
@@ -165,12 +166,12 @@ export default class CtrlManterAlunos {
 
   //-----------------------------------------------------------------------------------------//
  
-  async excluir(matr) {
+  async excluir(idjogo) {
     if(this.#status == Status.EXCLUINDO) {
       try {
-        let aluno = await this.#dao.obterAlunoPelaMatricula(matr); 
+        let aluno = await this.#dao.obterAlunoPelaMatricula(idjogo); 
         if(aluno == null) {
-          alert("Aluno com a matrícula " + matr + " não encontrado.");
+          alert("Jogo com identificação " + idjogo + " não encontrado.");
         } else {
           await this.#dao.excluir(aluno); 
         }

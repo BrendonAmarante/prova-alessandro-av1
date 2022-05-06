@@ -28,11 +28,11 @@ export default class ViewerAluno {
     this.btOk        = this.obterElemento('btOk');
     this.btCancelar  = this.obterElemento('btCancelar');
 
-    this.tfMatricula = this.obterElemento('tfMatricula');
-    this.tfCpf       = this.obterElemento('tfCpf');
+    this.IdJogo = this.obterElemento('tfIdJogo');
     this.tfNome      = this.obterElemento('tfNome');
-    this.tfEmail     = this.obterElemento('tfEmail');
-    this.tfTelefone  = this.obterElemento('tfTelefone');
+    this.tfPrecoAtual       = this.obterElemento('tfPrecoAtual');
+    this.tfDescricao     = this.obterElemento('tfDescricao');
+    this.tfAnoLancamento  = this.obterElemento('tfAnoLancamento');
       
     this.btPrimeiro.onclick = fnBtPrimeiro; 
     this.btProximo.onclick = fnBtProximo; 
@@ -72,19 +72,19 @@ export default class ViewerAluno {
     this.configurarNavegacao( pos <= 1 , pos == qtde );   
 
     if(aluno == null) {
-      this.tfMatricula.value = "";
-      this.tfCpf.value       = "";
-      this.tfNome.value      = "";
-      this.tfEmail.value     = "";
-      this.tfTelefone.value  = "";
-      this.divAviso.innerHTML = " Número de Alunos: 0";
+      this.IdJogo.value = "";
+      this.tfNome.value       = "";
+      this.tfPrecoAtual.value      = "";
+      this.tfDescricao.value     = "";
+      this.tfAnoLancamento.value  = "";
+      this.divAviso.innerHTML = " Número de Jogos: 0";
     } else {
-      this.tfMatricula.value = aluno.getMatricula();
-      this.tfCpf.value       = aluno.getCpf();
-      this.tfNome.value      = aluno.getNome();
-      this.tfEmail.value     = aluno.getEmail();
-      this.tfTelefone.value  = aluno.getTelefone();
-      this.divAviso.innerHTML = "Posição: " + pos + " | Número de Alunos: " + qtde;
+      this.IdJogo.value = aluno.getIdJogo();
+      this.tfNome.value       = aluno.getNome();
+      this.tfPrecoAtual.value      = aluno.getPrecoAtual();
+      this.tfDescricao.value     = aluno.getDescricao();
+      this.tfAnoLancamento.value  = aluno.getAnoLancamento();
+      this.divAviso.innerHTML = "Posição: " + pos + " | Número de Jogos: " + qtde;
     }
   }
 
@@ -105,36 +105,37 @@ export default class ViewerAluno {
     this.divDialogo.hidden = false; 
     
     if(operacao != Status.EXCLUINDO) {
-      this.tfCpf.disabled = false;
+      this.IdJogo.disabled = false;
       this.tfNome.disabled = false;
-      this.tfEmail.disabled = false;
-      this.tfTelefone.disabled = false;
+      this.tfPrecoAtual.disabled = false;
+      this.tfAnoLancamento.disabled = false;
+      this.tfDescricao.disabled = false;
       this.divAviso.innerHTML = "";      
     } else {
-      this.divAviso.innerHTML = "Deseja excluir este registro?";      
+      this.divAviso.innerHTML = "Deseja excluir este jogo?";      
     }
     if(operacao == Status.INCLUINDO) {
-      this.tfMatricula.disabled = false;
-      this.tfMatricula.value = "";
-      this.tfCpf.value = "";
+      this.IdJogo.disabled = false;
+      this.IdJogo.value = "";
       this.tfNome.value = "";
-      this.tfEmail.value = "";
-      this.tfTelefone.value = "";
+      this.tfPrecoAtual.value = "";
+      this.tfAnoLancamento.value = "";
+      this.tfDescricao.value = "";
     }
   }
 
 //------------------------------------------------------------------------//
   
   statusApresentacao() { 
-    this.tfCpf.disabled = true;
     this.divNavegar.hidden = false;
     this.divComandos.hidden = false;
     this.divDialogo.hidden = true; 
-    this.tfMatricula.disabled = true;
-    this.tfCpf.disabled = true;
+
+    this.IdJogo.disabled = true;
     this.tfNome.disabled = true;
-    this.tfEmail.disabled = true;
-    this.tfTelefone.disabled = true;
+    this.tfPrecoAtual.disabled = true;
+    this.tfAnoLancamento.disabled = true;
+    this.tfDescricao.disabled = true;
   }
 
 }
@@ -204,22 +205,22 @@ function fnBtExcluir() {
 //------------------------------------------------------------------------//
 
 function fnBtOk() {
-  const matricula = this.viewer.tfMatricula.value;
-  const cpf = this.viewer.tfCpf.value;
+  const idjogo = this.viewer.IdJogo.value;
   const nome = this.viewer.tfNome.value;
-  const email = this.viewer.tfEmail.value;
-  const telefone = this.viewer.tfTelefone.value;
+  const precoAtual = this.viewer.tfPrecoAtual.value;
+  const descricao = this.viewer.tfDescricao.value;
+  const anoLancamento = this.viewer.tfAnoLancamento.value;
     
   // Como defini que o método "efetivar" é um dos métodos incluir, excluir ou alterar
   // não estou precisando colocar os ninhos de IF abaixo.
-  this.viewer.getCtrl().efetivar(matricula, cpf, nome, email, telefone); 
+  this.viewer.getCtrl().efetivar(idjogo, nome, precoAtual, descricao, anoLancamento); 
 
   // if(this.viewer.getCtrl().getStatus() == Status.INCLUINDO) {
-  //  this.viewer.getCtrl().i(matricula, cpf, nome, email, telefone); 
+  //  this.viewer.getCtrl().i(idJogoicula, cpf, nome, email, telefone); 
   //} else if(this.viewer.getCtrl().getStatus() == Status.ALTERANDO) {
-  //  this.viewer.getCtrl().alterar(matricula, cpf, nome, email, telefone); 
+  //  this.viewer.getCtrl().alterar(idJogoicula, cpf, nome, email, telefone); 
   //} else if(this.viewer.getCtrl().getStatus() == Status.EXCLUINDO) {
-  //  this.viewer.getCtrl().excluir(matricula, cpf, nome, email, telefone); 
+  //  this.viewer.getCtrl().excluir(idJogoicula, cpf, nome, email, telefone); 
   //}
 }
 

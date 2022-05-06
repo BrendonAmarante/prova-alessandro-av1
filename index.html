@@ -8,17 +8,38 @@
     <link rel="manifest" href="manifest.json">
   </head>
   <body>
-    <header>
-      Cadastro de Alunos
-    </header>
+    <div class="main">
+    <div class="card">
+    <center>
+      <header><h1>Cadastro de Jogos - Frog Play</h1></header>
+      </center>
     <main>
-      <div><label>Matrícula:</label><input type="text" id="tfMatricula" disabled="true" /></div>
-      <div><label>CPF:</label><input type="text" id="tfCpf" disabled="true"/></div> 
-      <div><label>Nome:</label><input type="text" id="tfNome" disabled="true"/></div> 
-      <div><label>e-Mail:</label><input type="text" id="tfEmail" disabled="true"/></div> 
-      <div><label>Telefone:</label><input type="text" id="tfTelefone" disabled="true"/></div> 
-        <nav>
-          <div id="divNavegar">
+      <center>
+      <div>
+      <label><b>ID Jogo:</label><br>
+      <input type="text" id="tfIdJogo" disabled="true"/>
+      <br>
+
+      <label>Nome:</label><br>
+      <input type="text" id="tfNome" disabled="true"/>
+      <br>
+
+      <label>Preço Atual:</label><br>
+      <input type="text" id="tfPrecoAtual" disabled="true"/>
+      <br>
+
+      <label>Descricao:</label><br>
+      <input type="text" id="tfDescricao" disabled="true"/>
+      <br>
+
+      <label>Ano Lançamento:</b></label><br>
+      <input type="text" id="tfAnoLancamento" disabled="true"/></div>
+      <br>
+    </center>
+    <br> 
+      <nav>
+        <center>
+          <div class = "naveg" id="divNavegar">
             <button id="btPrimeiro">
               Primeiro
             </button>
@@ -32,7 +53,8 @@
               Último
             </button>
           </div>
-          <div id="divComandos">
+          <br>
+          <div class = "comandos" id="divComandos">
             <button id="btIncluir">
               Incluir
             </button>
@@ -46,7 +68,8 @@
               Sair
             </button>
           </div>
-          <div id="divAviso">
+          <br>
+          <div class = "dialogo" id="divAviso">
           </div>
           <div id="divDialogo" hidden>
             <button id="btOk">
@@ -56,11 +79,12 @@
               Cancelar
             </button>
           </div>
+        </center>
         </nav>
     </main>
-    <footer>
-      Desenvolvimento Mobile (2022/1)  
-    </footer>
+  </center>
+</div>
+</div>
   </body>
     <script type="module" src="/CtrlSessao.js"></script>
   <script> 
