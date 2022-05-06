@@ -46,7 +46,7 @@ export default class Jogo {
 
   setPrecoAtual(precoAtual) {
     if(!Jogo.validarPrecoAtual(precoAtual))
-      throw new ModelError("Formato de Preço atual Inválido: " + precoAtual +"\nLembre-se o formato correto é 'R$ 99,00'");
+      throw new ModelError("Formato de Preço atual Inválido: " + precoAtual +"\nLembre-se o formato correto é 'R$99,00'");
     this.#precoAtual = precoAtual;
   }
 
