@@ -1,27 +1,27 @@
 "use strict";
 
 import Status from "/Status.js";
-import Aluno from "/Aluno.js";
-import DaoAluno from "/DaoAluno.js";
-import ViewerAluno from "/ViewerAluno.js";
+import Jogo from "/Jogo.js";
+import DaoJogo from "/DaoJogo.js";
+import ViewerJogo from "/ViewerJogo.js";
 
-export default class CtrlManterAlunos {
+export default class CtrlManterJogo {
   
   //-----------------------------------------------------------------------------------------//
 
   //
   // Atributos do Controlador
   //
-  #dao;      // Referência para o Data Access Object para o Store de Alunos
+  #dao;      // Referência para o Data Access Object para o Store de Jogos
   #viewer;   // Referência para o gerenciador do viewer 
-  #posAtual; // Indica a posição do objeto Aluno que estiver sendo apresentado
+  #posAtual; // Indica a posição do objeto Jogo que estiver sendo apresentado
   #status;   // Indica o que o controlador está fazendo 
   
   //-----------------------------------------------------------------------------------------//
 
   constructor() {
-    this.#dao = new DaoAluno();
-    this.#viewer = new ViewerAluno(this);
+    this.#dao = new DaoJogo();
+    this.#viewer = new ViewerJogo(this);
     this.#posAtual = 1;
     this.#atualizarContextoNavegacao();    
   }
@@ -35,11 +35,11 @@ export default class CtrlManterAlunos {
     // Determina ao viewer que ele está apresentando dos dados 
     this.#viewer.statusApresentacao();
     
-    // Solicita ao DAO que dê a lista de todos os alunos presentes na base
-    let conjAlunos = await this.#dao.obterAlunos();
+    // Solicita ao DAO que dê a lista de todos os jogos presentes na base
+    let conjJogos = await this.#dao.obterJogos();
     
-    // Se a lista de alunos estiver vazia
-    if(conjAlunos.length == 0) {
+    // Se a lista de jogos estiver vazia
+    if(conjJogos.length == 0) {
       // Posição Atual igual a zero indica que não há objetos na base
       this.#posAtual = 0;
       
@@ -48,18 +48,18 @@ export default class CtrlManterAlunos {
     }
     else {
       // Se é necessário ajustar a posição atual, determino que ela passa a ser 1
-      if(this.#posAtual == 0 || this.#posAtual > conjAlunos.length)
+      if(this.#posAtual == 0 || this.#posAtual > conjJogos.length)
         this.#posAtual = 1;
       // Peço ao viewer que apresente o objeto da posição atual
-      this.#viewer.apresentar(this.#posAtual, conjAlunos.length, conjAlunos[this.#posAtual - 1]);
+      this.#viewer.apresentar(this.#posAtual, conjJogos.length, conjJogos[this.#posAtual - 1]);
     }
   }
   
   //-----------------------------------------------------------------------------------------//
 
   async apresentarPrimeiro() {
-    let conjAlunos = await this.#dao.obterAlunos();
-    if(conjAlunos.length > 0)
+    let conjJogos = await this.#dao.obterJogos();
+    if(conjJogos.length > 0)
       this.#posAtual = 1;
     this.#atualizarContextoNavegacao();
   }
@@ -67,8 +67,8 @@ export default class CtrlManterAlunos {
   //-----------------------------------------------------------------------------------------//
 
   async apresentarProximo() {
-    let conjAlunos = await this.#dao.obterAlunos();
-    if(this.#posAtual < conjAlunos.length)
+    let conjJogos = await this.#dao.obterJogos();
+    if(this.#posAtual < conjJogos.length)
       this.#posAtual++;
     this.#atualizarContextoNavegacao();
   }
@@ -76,7 +76,7 @@ export default class CtrlManterAlunos {
   //-----------------------------------------------------------------------------------------//
 
   async apresentarAnterior() {
-    let conjAlunos = await this.#dao.obterAlunos();
+    let conjJogos = await this.#dao.obterJogos();
     if(this.#posAtual > 1)
       this.#posAtual--;
     this.#atualizarContextoNavegacao();
@@ -85,8 +85,8 @@ export default class CtrlManterAlunos {
   //-----------------------------------------------------------------------------------------//
 
   async apresentarUltimo() {
-    let conjAlunos = await this.#dao.obterAlunos();
-    this.#posAtual = conjAlunos.length;
+    let conjJogos = await this.#dao.obterJogos();
+    this.#posAtual = conjJogos.length;
     this.#atualizarContextoNavegacao();
   }
 
@@ -128,8 +128,8 @@ export default class CtrlManterAlunos {
   async incluir(idjogo, nome, precoAtual, descricao, anoLancamento) {
     if(this.#status == Status.INCLUINDO) {
       try {
-        let aluno = new Aluno(idjogo, nome, precoAtual, descricao, anoLancamento);
-        await this.#dao.incluir(aluno); 
+        let jogo = new Jogo(idjogo, nome, precoAtual, descricao, anoLancamento);
+        await this.#dao.incluir(jogo); 
         this.#status = Status.NAVEGANDO;
         this.#atualizarContextoNavegacao();
       }
@@ -144,16 +144,16 @@ export default class CtrlManterAlunos {
   async alterar(idjogo, nome, precoAtual, descricao, anoLancamento) {
     if(this.#status == Status.ALTERANDO) {
       try {
-        let aluno = await this.#dao.obterAlunoPelaMatricula(idjogo); 
-        if(aluno == null) {
+        let jogo = await this.#dao.obterJogoPelaMatricula(idjogo); 
+        if(jogo == null) {
           alert("Jogo com identificação " + idjogo + " não encontrado.");
         } else {
           console.log("ta chegando aqui");
-          aluno.setPrecoAtual(precoAtual);
-          aluno.setNome(nome);
-          aluno.setDescricao(descricao);
-          aluno.setAnoLancamento(anoLancamento);
-          await this.#dao.alterar(aluno); 
+          jogo.setPrecoAtual(precoAtual);
+          jogo.setNome(nome);
+          jogo.setDescricao(descricao);
+          jogo.setAnoLancamento(anoLancamento);
+          await this.#dao.alterar(jogo); 
         }
         this.#status = Status.NAVEGANDO;
         this.#atualizarContextoNavegacao();
@@ -169,11 +169,11 @@ export default class CtrlManterAlunos {
   async excluir(idjogo) {
     if(this.#status == Status.EXCLUINDO) {
       try {
-        let aluno = await this.#dao.obterAlunoPelaMatricula(idjogo); 
-        if(aluno == null) {
+        let jogo = await this.#dao.obterJogoPelaMatricula(idjogo); 
+        if(jogo == null) {
           alert("Jogo com identificação " + idjogo + " não encontrado.");
         } else {
-          await this.#dao.excluir(aluno); 
+          await this.#dao.excluir(jogo); 
         }
         this.#status = Status.NAVEGANDO;
         this.#atualizarContextoNavegacao();

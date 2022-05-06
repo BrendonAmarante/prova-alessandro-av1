@@ -1,10 +1,10 @@
 import Status from "/Status.js";
-import Aluno from "/Aluno.js";
+import Jogo from "/Jogo.js";
 import ViewerError from "/ViewerError.js";
 
 //------------------------------------------------------------------------//
 
-export default class ViewerAluno {
+export default class ViewerJogo {
 
   #ctrl;
   

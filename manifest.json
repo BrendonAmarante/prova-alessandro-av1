@@ -1,14 +1,14 @@
 {
-  "name": "Cadastro de Alunos",
-  "short_name": "CadAlunos",
+  "name": "Cadastro de Jogos",
+  "short_name": "CadJogos",
   "categories": ["education","social"],
   "start_url": "/",
   "scope": ".",
   "shortcuts" : [
     {
-      "name": "Cadastro de Alunos",
+      "name": "Cadastro de Jogos",
       "url": "/",
-      "description": "Cadastro de Alunos"
+      "description": "Cadastro de Jogos"
     }
   ],
   

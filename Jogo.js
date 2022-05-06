@@ -1,6 +1,6 @@
 import ModelError from "/ModelError.js";
 
-export default class Aluno {
+export default class Jogo {
     
   //
   // DECLARAÇÃO DE ATRIBUTOS PRIVADOS: Em JavaScript, se o nome do atributo tem # no início, isso 
@@ -31,7 +31,7 @@ export default class Aluno {
   //-----------------------------------------------------------------------------------------//
 
   setIdJogo(idJogo) {
-    if(!Aluno.validarIdJogo(idJogo))
+    if(!Jogo.validarIdJogo(idJogo))
       throw new ModelError("Identificação do jogo Inválido: " + idJogo);
     this.#idJogo = idJogo;
   }
@@ -45,7 +45,7 @@ export default class Aluno {
   //-----------------------------------------------------------------------------------------//
 
   setPrecoAtual(precoAtual) {
-    if(!Aluno.validarPrecoAtual(precoAtual))
+    if(!Jogo.validarPrecoAtual(precoAtual))
       throw new ModelError("Formato de Preço atual Inválido: " + precoAtual +"\nLembre-se o formato correto é 'R$ 99,00'");
     this.#precoAtual = precoAtual;
   }
@@ -59,7 +59,7 @@ export default class Aluno {
   //-----------------------------------------------------------------------------------------//
 
   setNome(nome) {
-    if(!Aluno.validarNome(nome))
+    if(!Jogo.validarNome(nome))
       throw new ModelError("Nome Inválido: " + nome);
     this.#nome = nome;
   }
@@ -73,7 +73,7 @@ export default class Aluno {
   //-----------------------------------------------------------------------------------------//
 
   setDescricao(descricao) {
-    if(!Aluno.validarDescricao(descricao))
+    if(!Jogo.validarDescricao(descricao))
       throw new ModelError("A Descrição passou do limite de 150 caracteres.");
     this.#descricao = descricao;
   }
@@ -87,7 +87,7 @@ export default class Aluno {
   //-----------------------------------------------------------------------------------------//
 
   setAnoLancamento(anoLancamento) {
-    if(!Aluno.validarAnoLancamento(anoLancamento))
+    if(!Jogo.validarAnoLancamento(anoLancamento))
       throw new ModelError("Ano Lançamento inválido: " + anoLancamento + "\nLembre-se: o formato para o ano é 'AAAA'");
     this.#anoLancamento = anoLancamento;
   }
@@ -107,7 +107,7 @@ export default class Aluno {
   //-----------------------------------------------------------------------------------------//
 
   static assign(obj) {
-    return new Aluno(obj.idJogo, obj.nome, obj.precoAtual, obj.descricao, obj.anoLancamento);
+    return new Jogo(obj.idJogo, obj.nome, obj.precoAtual, obj.descricao, obj.anoLancamento);
   }
 
   //-----------------------------------------------------------------------------------------//

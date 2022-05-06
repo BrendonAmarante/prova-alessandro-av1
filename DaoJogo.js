@@ -1,16 +1,16 @@
 "use strict";
 
 import ModelError from "/ModelError.js";
-import Aluno from "/Aluno.js";
+import Jogo from "/Jogo.js";
 
-export default class DaoAluno {
+export default class DaoJogo {
   
   //-----------------------------------------------------------------------------------------//
 
   static conexao = null;
 
   constructor() {
-    this.arrayAlunos = [];
+    this.arrayJogos = [];
     this.obterConexao();
   }
 
@@ -20,16 +20,16 @@ export default class DaoAluno {
    *  Devolve uma Promise com a referência para o BD
    */ 
   async obterConexao() {
-    if(DaoAluno.conexao == null) {
-      DaoAluno.conexao = new Promise(function(resolve, reject) {
-        let requestDB = window.indexedDB.open("AlunoDB", 1); 
+    if(DaoJogo.conexao == null) {
+      DaoJogo.conexao = new Promise(function(resolve, reject) {
+        let requestDB = window.indexedDB.open("JogoDB", 1); 
 
         requestDB.onupgradeneeded = (event) => {
           let db = event.target.result;
-          let store = db.createObjectStore("AlunoST", {
+          let store = db.createObjectStore("JogoST", {
             autoIncrement: true
           });
-          store.createIndex("idxMatricula", "idJogo", { unique: true });
+          store.createIndex("idxJogo", "idJogo", { unique: true });
         };
 
         requestDB.onerror = event => {
@@ -46,21 +46,21 @@ export default class DaoAluno {
         };
       });
     }
-    return await DaoAluno.conexao;
+    return await DaoJogo.conexao;
   }
   
   //-----------------------------------------------------------------------------------------//
 
-  async obterAlunos() {
+  async obterJogos() {
     let connection = await this.obterConexao();      
     let promessa = new Promise(function(resolve, reject) {
       let transacao;
       let store;
       let indice;
       try {
-        transacao = connection.transaction(["AlunoST"], "readonly");
-        store = transacao.objectStore("AlunoST");
-        indice = store.index('idxMatricula');
+        transacao = connection.transaction(["JogoST"], "readonly");
+        store = transacao.objectStore("JogoST");
+        indice = store.index('idxJogo');
       } 
       catch (e) {
         reject(new ModelError("Erro: " + e));
@@ -69,7 +69,7 @@ export default class DaoAluno {
       indice.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {        
-          const novo = Aluno.assign(cursor.value);
+          const novo = Jogo.assign(cursor.value);
           array.push(novo);
           cursor.continue();
         } else {
@@ -77,8 +77,8 @@ export default class DaoAluno {
         }
       };
     });
-    this.arrayAlunos = await promessa;
-    return this.arrayAlunos;
+    this.arrayJogos = await promessa;
+    return this.arrayJogos;
   }
 
   //-----------------------------------------------------------------------------------------//
@@ -87,16 +87,16 @@ export default class DaoAluno {
 
   //-----------------------------------------------------------------------------------------//
   
-  async obterAlunoPelaMatricula(idJogo) {
+  async obterJogoPelaMatricula(idJogo) {
     let connection = await this.obterConexao();      
     let promessa = new Promise(function(resolve, reject) {
       let transacao;
       let store;
       let indice;
       try {
-        transacao = connection.transaction(["AlunoST"], "readonly");
-        store = transacao.objectStore("AlunoST");
-        indice = store.index('idxMatricula');
+        transacao = connection.transaction(["JogoST"], "readonly");
+        store = transacao.objectStore("JogoST");
+        indice = store.index('idxJogo');
       } 
       catch (e) {
         reject(new ModelError("Erro: " + e));
@@ -105,7 +105,7 @@ export default class DaoAluno {
       let consulta = indice.get(idJogo);
       consulta.onsuccess = function(event) { 
         if(consulta.result != null)
-          resolve(Aluno.assign(consulta.result)); 
+          resolve(Jogo.assign(consulta.result)); 
         else
           resolve(null);
       };
@@ -117,14 +117,14 @@ export default class DaoAluno {
 
   //-----------------------------------------------------------------------------------------//
 
-  async obterAlunosPeloAutoIncrement() {
+  async obterJogosPeloAutoIncrement() {
     let connection = await this.obterConexao();      
     let promessa = new Promise(function(resolve, reject) {
       let transacao;
       let store;
       try {
-        transacao = connection.transaction(["AlunoST"], "readonly");
-        store = transacao.objectStore("AlunoST");
+        transacao = connection.transaction(["JogoST"], "readonly");
+        store = transacao.objectStore("JogoST");
       } 
       catch (e) {
         reject(new ModelError("Erro: " + e));
@@ -133,7 +133,7 @@ export default class DaoAluno {
       store.openCursor().onsuccess = function(event) {
         var cursor = event.target.result;
         if (cursor) {        
-          const novo = Aluno.assign(cursor.value);
+          const novo = Jogo.assign(cursor.value);
           array.push(novo);
           cursor.continue();
         } else {
@@ -141,8 +141,8 @@ export default class DaoAluno {
         }
       };
     });
-    this.arrayAlunos = await promessa;
-    return this.arrayAlunos;
+    this.arrayJogos = await promessa;
+    return this.arrayJogos;
   }
 
   //-----------------------------------------------------------------------------------------//
@@ -151,12 +151,12 @@ export default class DaoAluno {
     
     let connection = await this.obterConexao();      
     let resultado = new Promise( (resolve, reject) => {
-      let transacao = connection.transaction(["AlunoST"], "readwrite");
+      let transacao = connection.transaction(["JogoST"], "readwrite");
       transacao.onerror = event => {
         reject(new ModelError("Não foi possível incluir o aluno", event.target.error));
       };
-      let store = transacao.objectStore("AlunoST");
-      let requisicao = store.add(Aluno.deassign(aluno));
+      let store = transacao.objectStore("JogoST");
+      let requisicao = store.add(Jogo.deassign(aluno));
       requisicao.onsuccess = function(event) {
           resolve(true);              
       };
@@ -169,27 +169,27 @@ export default class DaoAluno {
   async alterar(aluno) {
     let connection = await this.obterConexao();      
     let resultado = new Promise(function(resolve, reject) {
-      let transacao = connection.transaction(["AlunoST"], "readwrite");
+      let transacao = connection.transaction(["JogoST"], "readwrite");
       transacao.onerror = event => {
         reject(new ModelError("Não foi possível alterar o aluno", event.target.error));
       };
-      let store = transacao.objectStore("AlunoST");     
-      let indice = store.index('idxMatricula');
+      let store = transacao.objectStore("JogoST");     
+      let indice = store.index('idxJogo');
       var keyValue = IDBKeyRange.only(aluno.getIdJogo());
       indice.openCursor(keyValue).onsuccess = event => {
         const cursor = event.target.result;
         console.log(cursor);
         if (cursor) {
           if (cursor.value.idJogo == aluno.getIdJogo()) {
-            const request = cursor.update(Aluno.deassign(aluno));
+            const request = cursor.update(Jogo.deassign(aluno));
             request.onsuccess = () => {
-              console.log("[DaoAluno.alterar] Cursor update - Sucesso ");
+              console.log("[DaoJogo.alterar] Cursor update - Sucesso ");
               resolve("Ok");
               return;
             };
           } 
         } else {
-          reject(new ModelError("Aluno com a idJogo " + aluno.getIdJogo() + " não encontrado!",""));
+          reject(new ModelError("Jogo com a idJogo " + aluno.getIdJogo() + " não encontrado!",""));
         }
       };
     });
@@ -201,12 +201,12 @@ export default class DaoAluno {
   async excluir(aluno) {
     let connection = await this.obterConexao();      
     let transacao = await new Promise(function(resolve, reject) {
-      let transacao = connection.transaction(["AlunoST"], "readwrite");
+      let transacao = connection.transaction(["JogoST"], "readwrite");
       transacao.onerror = event => {
         reject(new ModelError("Não foi possível excluir o aluno", event.target.error));
       };
-      let store = transacao.objectStore("AlunoST");
-      let indice = store.index('idxMatricula');
+      let store = transacao.objectStore("JogoST");
+      let indice = store.index('idxJogo');
       var keyValue = IDBKeyRange.only(aluno.getIdJogo());
       indice.openCursor(keyValue).onsuccess = event => {
         const cursor = event.target.result;
@@ -219,7 +219,7 @@ export default class DaoAluno {
             return;
           }
         } else {
-          reject(new ModelError("Aluno com a idJogoícula " + aluno.getIdJogo() + " não encontrado!",""));
+          reject(new ModelError("Jogo com a idJogoícula " + aluno.getIdJogo() + " não encontrado!",""));
         }
       };
     });
